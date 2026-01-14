@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BetMaster Pro</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: var(--tg-theme-bg-color, #ffffff);
+            --text: var(--tg-theme-text-color, #222222);
+            --hint: var(--tg-theme-hint-color, #999999);
+            --link: var(--tg-theme-link-color, #248bcf);
+            --sec-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+            --btn: var(--tg-theme-button-color, #3390ec);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --win: #4caf50;
+            --loss: #f44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            padding-bottom: 80px; /* Місце для нижньої навігації */
+        }
+
+        /* Статистика зверху */
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            background: var(--sec-bg);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-value { font-size: 1.2rem; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.75rem; color: var(--hint); text-transform: uppercase; }
+
+        /* Картка прогнозу */
+        .card {
+            background: var(--sec-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .card-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .tag-free { background: #e3f2fd; color: #1976d2; }
+        .tag-paid { background: #fff8e1; color: #fbc02d; border: 1px solid #fbc02d; }
+
+        .teams { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
+        .details { color: var(--hint); font-size: 0.9rem; margin-bottom: 12px; }
+        .odds-badge {
+            display: inline-block;
+            background: var(--btn);
+            color: var(--btn-text);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Навігація знизу */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            display: flex;
+            border-top: 1px solid var(--sec-bg);
+            padding: 10px 0;
+        }
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            background: none;
+            border: none;
+            color: var(--hint);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .nav-item.active { color: var(--btn); font-weight: bold; }
+        .nav-icon { font-size: 1.4rem; display: block; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="tab-home">
+        <div class="stats-header">
+            <div class="stat-item">
+                <span class="stat-value" style="color: var(--win)">84%</span>
+                <span class="stat-label">Прохід</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">+14.2%</span>
+                <span class="stat-label">ROI (міс)</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="user-balance">2200</span>
+                <span class="stat-label">Банк</span>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 12px;">Актуальні прогнози</h3>
+        
+        <div class="card">
+            <span class="card-tag tag-free">БЕЗКОШТОВНО</span>
+            <div class="teams">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Арсенал — Ліверпуль</div>
+            <div class="details">Тип: Тотал більше 2.5<br>Початок: сьогодні, 21:45</div>
+            <div class="odds-badge">Кеф: 1.82</div>
+        </div>
+
+        <div class="card" style="background: linear-gradient(145deg, var(--sec-bg), #fffdec);">
+            <span class="card-tag tag-paid">⭐️ VIP</span>
+            <div class="teams">🇪🇸 Реал Мадрид — Барселона</div>
+            <div class="details">Аналітика на "Ель Класіко" готова!<br>Доступно для VIP-підписників.</div>
+            <button class="odds-badge" style="border:none; width: 100%; margin-top: 10px;" onclick="payStars()">Відкрити за 50 Stars</button>
+        </div>
+    </div>
+
+    <div id="tab-history" class="hidden">
+        <h3>Архів прогнозів</h3>
+        <div class="card">
+            <div class="teams">Ман Сіті — Тоттенгем</div>
+            <div style="color: var(--win); font-weight: bold;">✅ ВИГРАШ (Кеф 1.95)</div>
+        </div>
+        <div class="card">
+            <div class="teams">Баварія — Боруссія Д.</div>
+            <div style="color: var(--loss); font-weight: bold;">❌ ПРОГРАШ (Кеф 2.10)</div>
+        </div>
+        <div class="card">
+            <div class="teams">Ювентус — Мілан</div>
+            <div style="color: var(--win); font-weight: bold;">✅ ВИГРАШ (Кеф 1.70)</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home')">
+            <span class="nav-icon">⚽️</span> Прогнози
+        </button>
+        <button class="nav-item" onclick="switchTab('history')">
+            <span class="nav-icon">📊</span> Статистика
+        </button>
+        <button class="nav-item" onclick="tg.close()">
+            <span class="nav-icon">🚪</span> Вийти
+        </button>
+    </nav>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Розгортаємо на весь екран
+
+        function switchTab(tab) {
+            // Перемикання вкладки
+            document.getElementById('tab-home').classList.toggle('hidden', tab !== 'home');
+            document.getElementById('tab-history').classList.toggle('hidden', tab !== 'history');
+            
+            // Оновлення стилів кнопок
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function payStars() {
+            // Імітація оплати
+            tg.showConfirm("Ви хочете розблокувати цей прогноз за 50 Stars?");
+        }
+    </script>
+</body>
+</html>
