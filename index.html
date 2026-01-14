@@ -119,39 +119,44 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
 
+    // --- ВСТАВТЕ ВАШІ ДАНІ ТУТ ---
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
+    // ---------------------------
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // ВИПРАВЛЕНО: Ми використовуємо window.supabase, щоб уникнути конфлікту імен
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     let currentFilter = 'sport';
 
     async function loadData() {
-        document.getElementById('loading').style.display = 'block';
+        const loadingEl = document.getElementById('loading');
+        if (loadingEl) loadingEl.style.display = 'block';
         
-        // Запитуємо дані з таблиці 'predictions'
-        const { data, error } = await supabase
+        // ВИПРАВЛЕНО: Використовуємо supabaseClient замість supabase
+        const { data, error } = await supabaseClient
             .from('predictions')
             .select('*')
             .order('id', { ascending: false });
 
         if (error) {
-            console.error(error);
-            document.getElementById('loading').innerText = 'Помилка завантаження';
+            console.error('Помилка Supabase:', error);
+            if (loadingEl) loadingEl.innerText = 'Помилка завантаження. Перевірте консоль.';
             return;
         }
 
-        render(data, currentFilter);
-        document.getElementById('loading').style.display = 'none';
+        render(data || [], currentFilter);
+        if (loadingEl) loadingEl.style.display = 'none';
     }
 
     function render(allPredictions, filterType) {
         const container = document.getElementById('list-container');
+        if (!container) return;
         container.innerHTML = '';
 
         const filtered = allPredictions.filter(p => p.type === filterType);
 
         if (filtered.length === 0) {
-            container.innerHTML = '<div style="color: grey; text-align: center;">Прогнозів поки немає</div>';
+            container.innerHTML = '<div style="color: grey; text-align: center; padding: 20px;">Прогнозів поки немає</div>';
             return;
         }
 
@@ -166,10 +171,10 @@
             card.innerHTML = `
                 <div class="card-header">
                     <span>${p.isVip ? '⭐️ VIP' : 'БЕЗКОШТОВНО'}</span>
-                    <span>${p.time}</span>
+                    <span>${p.time || ''}</span>
                 </div>
-                <div class="card-teams">${p.teams}</div>
-                <div>Ставка: ${p.bet} • Кеф ${p.odds}</div>
+                <div class="card-teams">${p.teams || 'Без назви'}</div>
+                <div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>
                 ${p.status === 'win' ? '<div class="card-result" style="color: var(--win)">✅ ВИГРАШ</div>' : ''}
                 ${p.status === 'loss' ? '<div class="card-result" style="color: var(--loss)">❌ ПРОГРАШ</div>' : ''}
             `;
@@ -177,28 +182,33 @@
         });
     }
 
+    // Функція перемикання вкладок
     function showTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.classList.add('active');
+        
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        tg.HapticFeedback.selectionChanged();
     }
 
-    document.getElementById('btn-sport').onclick = () => {
+    // Прив'язка кнопок фільтрів
+    document.getElementById('btn-sport').onclick = function() {
         currentFilter = 'sport';
         document.getElementById('btn-esport').classList.remove('active');
-        document.getElementById('btn-sport').classList.add('active');
+        this.classList.add('active');
         loadData();
     };
 
-    document.getElementById('btn-esport').onclick = () => {
+    document.getElementById('btn-esport').onclick = function() {
         currentFilter = 'esport';
         document.getElementById('btn-sport').classList.remove('active');
-        document.getElementById('btn-esport').classList.add('active');
+        this.classList.add('active');
         loadData();
     };
 
-    // Запуск завантаження
+    // Запуск
     loadData();
 
     if (tg.initDataUnsafe?.user) {
