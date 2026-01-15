@@ -26,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* Header */
         .app-header {
             position: sticky; top: 0;
             background: rgba(28, 28, 30, 0.9);
@@ -36,7 +35,7 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 8px; }
-        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
+        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; background: #333; }
         .app-title { font-size: 1.1rem; font-weight: 800; }
 
         .balance-badge {
@@ -53,7 +52,7 @@
         .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
         .filter-btn {
             flex: 1; background: var(--card-bg); border: 1px solid #444; color: var(--text-main);
-            padding: 10px; border-radius: 12px; transition: 0.2s; cursor: pointer;
+            padding: 10px; border-radius: 12px; transition: 0.2s; cursor: pointer; text-align: center;
         }
         .filter-btn.active { background: var(--accent); border-color: var(--accent); font-weight: bold; }
 
@@ -90,7 +89,7 @@
 
 <header class="app-header">
     <div class="header-left">
-        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="Logo">
+        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="L">
         <div class="app-title">Bets Store</div>
     </div>
     <div class="balance-badge">
@@ -131,7 +130,7 @@
                 <button class="buy-vip-btn" onclick="buyVip()">КУПИТИ VIP-ПІДПИСКУ</button>
             </div>
         </div>
-        <button class="buy-vip-btn" style="background: var(--card-bg); color: white; border: 1px solid #444;" onclick="tg.showAlert('Історія покупок поки порожня')">📜 Мої покупки</button>
+        <button class="buy-vip-btn" style="background: var(--card-bg); color: white; border: 1px solid #444;" onclick="window.Telegram.WebApp.showAlert('Історія покупок поки порожня')">📜 Мої покупки</button>
     </div>
 </div>
 
@@ -147,41 +146,51 @@
 
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    // ВИПРАВЛЕНО: Змінено назву змінної, щоб уникнути конфлікту з бібліотекою
+    const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentType = 'sport';
     let userId = tg.initDataUnsafe?.user?.id || 0;
 
     async function loadData() {
-        // Сортуємо за ID, оскільки created_at немає в таблиці
-        const { data: predictions, error: pError } = await supabase
-            .from('predictions')
-            .select('*')
-            .order('id', { ascending: false });
-
-        if (!pError) renderLists(predictions);
-
-        // Завантажуємо профілі
-        if (userId) {
-            const { data: profile, error: uError } = await supabase
-                .from('profiles')
+        try {
+            // Завантаження прогнозів (сортування за ID)
+            const { data: predictions, error: pError } = await sbClient
+                .from('predictions')
                 .select('*')
-                .eq('id', userId)
-                .single();
+                .order('id', { ascending: false });
 
-            if (!uError && profile) {
-                updateUI(profile);
+            if (!pError && predictions) {
+                renderLists(predictions);
             }
+
+            // Завантаження профілю
+            if (userId) {
+                const { data: profile, error: uError } = await sbClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (!uError && profile) {
+                    updateProfileUI(profile);
+                }
+            }
+        } catch (e) {
+            console.error("Критична помилка завантаження:", e);
         }
-        setupProfileInfo();
+        setupUserInfo();
     }
 
-    function updateUI(profile) {
-        document.getElementById('header-balance').innerText = profile.balance || '0';
+    function updateProfileUI(profile) {
+        const balanceEl = document.getElementById('header-balance');
         const label = document.getElementById('vip-label');
         const buySection = document.getElementById('vip-buy-section');
         
-        if (profile.is_vip) {
+        if (balanceEl) balanceEl.innerText = profile.balance || '0';
+        
+        if (profile.is_vip && label && buySection) {
             label.innerText = "👑 VIP-ПІДПИСНИК";
             label.classList.add('vip-active');
             buySection.style.display = 'none';
@@ -191,7 +200,7 @@
     function renderLists(data) {
         const activeContainer = document.getElementById('active-list');
         const finishedContainer = document.getElementById('finished-list');
-        if (!activeContainer || !finishedContainer) return;
+        if (!activeContainer || !finishedContainer || !data) return;
 
         activeContainer.innerHTML = '';
         finishedContainer.innerHTML = '';
@@ -215,48 +224,54 @@
                 <span>${p.isVip ? '⭐️ VIP' : 'FREE'}</span>
                 <span>${p.time || ''}</span>
             </div>
-            <div class="card-teams">${p.teams || 'Невідомі команди'}</div>
+            <div class="card-teams">${p.teams || 'Матч'}</div>
             <div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>
             ${resText}
         `;
         return card;
     }
 
-    function setupProfileInfo() {
+    function setupUserInfo() {
+        const nameEl = document.getElementById('user-full-name');
+        const avatarEl = document.getElementById('user-avatar');
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
-            document.getElementById('user-full-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            if (user.photo_url) document.getElementById('user-avatar').src = user.photo_url;
+            if (nameEl) nameEl.innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            if (avatarEl && user.photo_url) avatarEl.src = user.photo_url;
         }
     }
 
+    // ВИПРАВЛЕНО: Функції винесено в глобальну область видимості
     window.showTab = function(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+        
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         tg.HapticFeedback.impactOccurred('medium');
     }
 
-    document.getElementById('btn-sport').onclick = () => { 
-        currentType = 'sport'; 
-        toggleFilterButtons('btn-sport', 'btn-esport');
-        loadData(); 
-    };
-    document.getElementById('btn-esport').onclick = () => { 
-        currentType = 'esport'; 
-        toggleFilterButtons('btn-esport', 'btn-sport');
-        loadData(); 
-    };
-
-    function toggleFilterButtons(activeId, inactiveId) {
-        document.getElementById(activeId).classList.add('active');
-        document.getElementById(inactiveId).classList.remove('active');
-    }
-
     window.buyVip = function() {
         tg.showConfirm("Бажаєте активувати VIP-підписку?");
     }
+
+    const btnSport = document.getElementById('btn-sport');
+    const btnEsport = document.getElementById('btn-esport');
+
+    if (btnSport) btnSport.onclick = () => { 
+        currentType = 'sport'; 
+        btnSport.classList.add('active');
+        if (btnEsport) btnEsport.classList.remove('active');
+        loadData(); 
+    };
+    
+    if (btnEsport) btnEsport.onclick = () => { 
+        currentType = 'esport'; 
+        btnEsport.classList.add('active');
+        if (btnSport) btnSport.classList.remove('active');
+        loadData(); 
+    };
 
     loadData();
 </script>
