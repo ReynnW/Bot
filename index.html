@@ -36,7 +36,7 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 8px; }
-        .app-logo { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
+        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
         .app-title { font-size: 1.1rem; font-weight: 800; }
 
         .balance-badge {
@@ -46,7 +46,6 @@
 
         .container { padding: 16px; padding-bottom: 100px; }
 
-        /* Tabs & Animation */
         .tab-content { display: none; opacity: 0; transform: translateY(10px); }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -54,14 +53,12 @@
         .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
         .filter-btn {
             flex: 1; background: var(--card-bg); border: 1px solid #444; color: var(--text-main);
-            padding: 10px; border-radius: 12px; transition: 0.2s;
+            padding: 10px; border-radius: 12px; transition: 0.2s; cursor: pointer;
         }
         .filter-btn.active { background: var(--accent); border-color: var(--accent); font-weight: bold; }
 
-        /* Section Titles */
         .section-label { font-size: 0.85rem; color: var(--text-hint); text-transform: uppercase; margin: 20px 0 10px 4px; letter-spacing: 1px; }
 
-        /* Cards */
         .card {
             background: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px;
             border-left: 4px solid var(--accent); position: relative;
@@ -73,20 +70,18 @@
         .card-teams { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
         .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
 
-        /* Profile */
         .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
-        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--accent); }
-        .vip-status { font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--accent); object-fit: cover; }
+        .vip-status { font-size: 0.8rem; font-weight: bold; padding: 6px 16px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
         .vip-active { background: var(--gold); color: #000; }
 
         .buy-vip-btn {
             width: 100%; background: linear-gradient(45deg, var(--gold), #ffaa00);
-            color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 10px;
+            color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 15px; cursor: pointer;
         }
 
-        /* Nav */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #2c2c2e; display: flex; border-top: 1px solid #444; padding: 10px 0; }
-        .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.75rem; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #2c2c2e; display: flex; border-top: 1px solid #444; padding: 10px 0; z-index: 1000; }
+        .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.75rem; cursor: pointer; }
         .nav-btn.active { color: var(--accent); }
         .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 4px; }
     </style>
@@ -95,7 +90,7 @@
 
 <header class="app-header">
     <div class="header-left">
-        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/logo.png" class="app-logo" alt="Logo">
+        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="Logo">
         <div class="app-title">Bets Store</div>
     </div>
     <div class="balance-badge">
@@ -109,16 +104,14 @@
             <button class="filter-btn active" id="btn-sport">⚽️ Спорт</button>
             <button class="filter-btn" id="btn-esport">🎮 Кіберспорт</button>
         </div>
-
         <div class="section-label">Актуальні</div>
         <div id="active-list"></div>
-
         <div class="section-label">Завершені (Останні 15)</div>
         <div id="finished-list"></div>
     </div>
 
     <div id="stats" class="tab-content">
-        <h3>Аналітика успіху</h3>
+        <h3 style="margin-left: 5px;">Аналітика успіху</h3>
         <div class="stats-box">
             <div style="display:flex; justify-content: space-between"><span>⚽️ Спорт</span><span style="color: var(--win)">78%</span></div>
             <div class="progress-container"><div class="progress-bar" style="width: 78%"></div></div>
@@ -131,15 +124,14 @@
 
     <div id="profile" class="tab-content">
         <div class="profile-card">
-            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=007aff&color=fff" class="avatar">
+            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2c2c2e&color=fff" class="avatar">
             <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
             <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
-            
             <div id="vip-buy-section">
                 <button class="buy-vip-btn" onclick="buyVip()">КУПИТИ VIP-ПІДПИСКУ</button>
             </div>
         </div>
-        <button class="action-btn" style="background: var(--card-bg); border: 1px solid #444;" onclick="tg.showAlert('Тут буде історія')">📜 Мої покупки</button>
+        <button class="buy-vip-btn" style="background: var(--card-bg); color: white; border: 1px solid #444;" onclick="tg.showAlert('Історія покупок поки порожня')">📜 Мої покупки</button>
     </div>
 </div>
 
@@ -150,7 +142,7 @@
 </nav>
 
 <script>
-    let tg = window.Telegram.WebApp;
+    const tg = window.Telegram.WebApp;
     tg.expand();
 
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
@@ -158,17 +150,49 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentType = 'sport';
-    let isUserVip = false; // Потім беремо з бази
+    let userId = tg.initDataUnsafe?.user?.id || 0;
 
-    async function loadAll() {
-        const { data, error } = await supabase.from('predictions').select('*').order('created_at', { ascending: false });
-        if (!error) renderLists(data);
-        setupProfile();
+    async function loadData() {
+        // Сортуємо за ID, оскільки created_at немає в таблиці
+        const { data: predictions, error: pError } = await supabase
+            .from('predictions')
+            .select('*')
+            .order('id', { ascending: false });
+
+        if (!pError) renderLists(predictions);
+
+        // Завантажуємо профілі
+        if (userId) {
+            const { data: profile, error: uError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (!uError && profile) {
+                updateUI(profile);
+            }
+        }
+        setupProfileInfo();
+    }
+
+    function updateUI(profile) {
+        document.getElementById('header-balance').innerText = profile.balance || '0';
+        const label = document.getElementById('vip-label');
+        const buySection = document.getElementById('vip-buy-section');
+        
+        if (profile.is_vip) {
+            label.innerText = "👑 VIP-ПІДПИСНИК";
+            label.classList.add('vip-active');
+            buySection.style.display = 'none';
+        }
     }
 
     function renderLists(data) {
         const activeContainer = document.getElementById('active-list');
         const finishedContainer = document.getElementById('finished-list');
+        if (!activeContainer || !finishedContainer) return;
+
         activeContainer.innerHTML = '';
         finishedContainer.innerHTML = '';
 
@@ -191,33 +215,22 @@
                 <span>${p.isVip ? '⭐️ VIP' : 'FREE'}</span>
                 <span>${p.time || ''}</span>
             </div>
-            <div class="card-teams">${p.teams}</div>
-            <div>Ставка: ${p.bet} • Кеф ${p.odds}</div>
+            <div class="card-teams">${p.teams || 'Невідомі команди'}</div>
+            <div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>
             ${resText}
         `;
         return card;
     }
 
-    function setupProfile() {
+    function setupProfileInfo() {
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
             document.getElementById('user-full-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             if (user.photo_url) document.getElementById('user-avatar').src = user.photo_url;
-            
-            // Логіка кнопки VIP (припустимо, беремо з бази)
-            isUserVip = false; // Замініть на реальну перевірку
-            const label = document.getElementById('vip-label');
-            const buyBtn = document.getElementById('vip-buy-section');
-            
-            if (isUserVip) {
-                label.innerText = "👑 VIP-ПІДПИСНИК";
-                label.classList.add('vip-active');
-                buyBtn.style.display = 'none';
-            }
         }
     }
 
-    function showTab(tabId, btn) {
+    window.showTab = function(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -225,15 +238,27 @@
         tg.HapticFeedback.impactOccurred('medium');
     }
 
-    document.getElementById('btn-sport').onclick = () => { currentType = 'sport'; updateFilters('btn-sport', 'btn-esport'); loadAll(); };
-    document.getElementById('btn-esport').onclick = () => { currentType = 'esport'; updateFilters('btn-esport', 'btn-sport'); loadAll(); };
+    document.getElementById('btn-sport').onclick = () => { 
+        currentType = 'sport'; 
+        toggleFilterButtons('btn-sport', 'btn-esport');
+        loadData(); 
+    };
+    document.getElementById('btn-esport').onclick = () => { 
+        currentType = 'esport'; 
+        toggleFilterButtons('btn-esport', 'btn-sport');
+        loadData(); 
+    };
 
-    function updateFilters(act, inact) {
-        document.getElementById(act).classList.add('active');
-        document.getElementById(inact).classList.remove('active');
+    function toggleFilterButtons(activeId, inactiveId) {
+        document.getElementById(activeId).classList.add('active');
+        document.getElementById(inactiveId).classList.remove('active');
     }
 
-    loadAll();
+    window.buyVip = function() {
+        tg.showConfirm("Бажаєте активувати VIP-підписку?");
+    }
+
+    loadData();
 </script>
 </body>
 </html>
