@@ -12,7 +12,7 @@
             --card-bg: #2c2c2e;
             --text-main: #ffffff;
             --text-hint: #8e8e93;
-            --accent: #007aff; /* Голубий колір для лого */
+            --accent: #007aff;
             --win: #34c759;
             --loss: #ff3b30;
             --gold: #ffcc00;
@@ -26,6 +26,7 @@
             overflow-x: hidden;
         }
 
+        /* Header */
         .app-header {
             position: sticky; top: 0;
             background: rgba(28, 28, 30, 0.9);
@@ -35,21 +36,7 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 8px; }
-
-        /* НОВЕ: Стиль для логотипа через маску */
-        .app-logo {
-            width: 28px; height: 28px;
-            background-color: var(--accent); /* Колір заливки (голубий) */
-            /* Використовуємо картинку як маску, щоб вирізати форму */
-            -webkit-mask-image: url('https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png');
-            mask-image: url('https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png');
-            -webkit-mask-size: contain;
-            mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-            mask-position: center;
-        }
-        
+        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
         .app-title { font-size: 1.1rem; font-weight: 800; }
 
         .balance-badge {
@@ -59,6 +46,7 @@
 
         .container { padding: 16px; padding-bottom: 100px; }
 
+        /* Вкладки */
         .tab-content { display: none; opacity: 0; transform: translateY(10px); }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -72,6 +60,7 @@
 
         .section-label { font-size: 0.85rem; color: var(--text-hint); text-transform: uppercase; margin: 20px 0 10px 4px; letter-spacing: 1px; }
 
+        /* Картки */
         .card {
             background: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px;
             border-left: 4px solid var(--accent); position: relative;
@@ -83,9 +72,14 @@
         .card-teams { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
         .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
 
+        /* Профіль */
         .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
-        /* НОВЕ: Стиль аватара з обводкою */
-        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--card-bg); outline: 2px solid var(--accent); object-fit: cover; background: var(--card-bg); padding: 2px; }
+        .avatar-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px; }
+        .avatar { 
+            width: 80px; height: 80px; border-radius: 50%; 
+            border: 3px solid var(--card-bg); outline: 2px solid var(--accent); 
+            object-fit: cover; background: var(--bg-color);
+        }
         .vip-status { font-size: 0.8rem; font-weight: bold; padding: 6px 16px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
         .vip-active { background: var(--gold); color: #000; }
 
@@ -94,6 +88,7 @@
             color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 15px; cursor: pointer;
         }
 
+        /* Навігація */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #2c2c2e; display: flex; border-top: 1px solid #444; padding: 10px 0; z-index: 1000; }
         .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.75rem; cursor: pointer; }
         .nav-btn.active { color: var(--accent); }
@@ -104,7 +99,7 @@
 
 <header class="app-header">
     <div class="header-left">
-        <div class="app-logo"></div>
+        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="Logo">
         <div class="app-title">Bets Store</div>
     </div>
     <div class="balance-badge">
@@ -138,7 +133,9 @@
 
     <div id="profile" class="tab-content">
         <div class="profile-card">
-            <img id="user-avatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e8e93'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
+            <div class="avatar-container">
+                <img id="user-avatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e8e93'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
+            </div>
             <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
             <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
             <div id="vip-buy-section">
@@ -158,11 +155,10 @@
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.headerColor = '#1c1c1e'; // Колір системного хедера Telegram
+    tg.headerColor = '#1c1c1e';
 
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
-    
     const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentType = 'sport';
@@ -191,7 +187,7 @@
                 }
             }
         } catch (e) {
-            console.error("Erro:", e);
+            console.error("Помилка завантаження:", e);
         }
         setupUserInfo();
     }
@@ -252,7 +248,6 @@
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
             if (nameEl) nameEl.innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            // Якщо у користувача є фото, замінюємо заглушку
             if (avatarEl && user.photo_url) avatarEl.src = user.photo_url;
         }
     }
@@ -271,20 +266,17 @@
         tg.showConfirm("Бажаєте активувати VIP-підписку?");
     }
 
-    const btnSport = document.getElementById('btn-sport');
-    const btnEsport = document.getElementById('btn-esport');
-
-    if (btnSport) btnSport.onclick = () => { 
+    document.getElementById('btn-sport').onclick = () => { 
         currentType = 'sport'; 
-        btnSport.classList.add('active');
-        if (btnEsport) btnEsport.classList.remove('active');
+        document.getElementById('btn-sport').classList.add('active');
+        document.getElementById('btn-esport').classList.remove('active');
         loadData(); 
     };
     
-    if (btnEsport) btnEsport.onclick = () => { 
+    document.getElementById('btn-esport').onclick = () => { 
         currentType = 'esport'; 
-        btnEsport.classList.add('active');
-        if (btnSport) btnSport.classList.remove('active');
+        document.getElementById('btn-esport').classList.add('active');
+        document.getElementById('btn-sport').classList.remove('active');
         loadData(); 
     };
 
