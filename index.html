@@ -42,6 +42,8 @@
             display: flex; align-items: center; gap: 6px; font-weight: bold; border: 1px solid rgba(255,204,0,0.2);
         }
 
+        .container { padding: 16px; padding-bottom: 100px; }
+
         /* Referral Banner */
         .referral-banner {
             background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2e 100%);
@@ -52,9 +54,6 @@
             position: relative;
             overflow: hidden;
         }
-        .referral-banner::after {
-            content: '🎁'; position: absolute; right: -10px; bottom: -10px; font-size: 4rem; opacity: 0.2;
-        }
         .ref-title { color: var(--gold); font-weight: 800; font-size: 1rem; margin-bottom: 4px; display: block; }
         .ref-text { font-size: 0.8rem; color: var(--text-main); line-height: 1.3; margin-bottom: 12px; display: block; }
         .ref-progress-box { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -62,11 +61,11 @@
         .ref-progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s; }
         .ref-count-text { font-size: 0.75rem; font-weight: bold; color: var(--gold); min-width: 30px; }
         .ref-btn {
-            background: var(--gold); color: #000; border: none; padding: 8px 16px; border-radius: 8px;
-            font-size: 0.8rem; font-weight: bold; cursor: pointer; width: 100%;
+            background: var(--gold); color: #000; border: none; padding: 10px 16px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: bold; cursor: pointer; width: 100%;
         }
 
-        .container { padding: 16px; padding-bottom: 100px; }
+        /* Tabs */
         .tab-content { display: none; opacity: 0; transform: translateY(10px); }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -97,7 +96,6 @@
         .card-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-hint); margin-bottom: 8px; }
         .card-teams { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
         .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
-
         .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
         .avatar-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px; }
         .avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--card-bg); outline: 2px solid var(--accent); object-fit: cover; background: var(--bg-color); }
@@ -124,14 +122,11 @@
 
 <div class="container">
     <div id="prognosis" class="tab-content active">
-        
         <div class="referral-banner" id="ref-banner">
             <span class="ref-title">VIP БЕЗКОШТОВНО 🎁</span>
-            <span class="ref-text">Запроси 3 друзів у проект та отримай VIP-статус на 14 днів!</span>
+            <span class="ref-text">Запроси 3 друзів у бот та отримай VIP-статус на 14 днів!</span>
             <div class="ref-progress-box">
-                <div class="ref-progress-bar">
-                    <div class="ref-progress-fill" id="ref-fill"></div>
-                </div>
+                <div class="ref-progress-bar"><div class="ref-progress-fill" id="ref-fill"></div></div>
                 <span class="ref-count-text" id="ref-status">0/3</span>
             </div>
             <button class="ref-btn" onclick="shareRefLink()">ЗАПРОСИТИ ДРУЗІВ</button>
@@ -150,26 +145,14 @@
     <div id="stats" class="tab-content">
         <div class="section-label">Загальний дашборд</div>
         <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-value" id="stat-total-winrate">0%</span>
-                <span class="stat-label">Вінрейт</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" style="color: var(--gold);" id="stat-roi">+0%</span>
-                <span class="stat-label">ROI</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="stat-avg-odds">0.0</span>
-                <span class="stat-label">Сер. кеф</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="stat-total-bets">0</span>
-                <span class="stat-label">Матчів</span>
-            </div>
+            <div class="stat-card"><span class="stat-value" id="stat-total-winrate">0%</span><span class="stat-label">Вінрейт</span></div>
+            <div class="stat-card"><span class="stat-value" style="color: var(--gold);" id="stat-roi">+0%</span><span class="stat-label">ROI</span></div>
+            <div class="stat-card"><span class="stat-value" id="stat-avg-odds">0.0</span><span class="stat-label">Сер. кеф</span></div>
+            <div class="stat-card"><span class="stat-value" id="stat-total-bets">0</span><span class="stat-label">Матчів</span></div>
         </div>
-        <div class="section-label">Форма</div>
+        <div class="section-label">Форма (Останні 10)</div>
         <div class="detailed-stats"><div class="form-row" id="form-streak"></div></div>
-        <div class="section-label">За категоріями</div>
+        <div class="section-label">Ефективність</div>
         <div class="detailed-stats">
             <div class="progress-info"><span>⚽️ Спорт</span><span style="color: var(--win)" id="winrate-sport">0%</span></div>
             <div class="progress-container"><div class="progress-bar" id="bar-sport" style="width: 0%"></div></div>
@@ -210,7 +193,7 @@
 
     let currentType = 'sport';
     let userId = tg.initDataUnsafe?.user?.id;
-    let botUsername = "Cybernewsuacs2"; // ЗАМІНІТЬ НА ЮЗЕРНЕЙМ ВАШОГО БОТА
+    let botUsername = "Cybernewsuacs2"; 
 
     async function loadData() {
         try {
@@ -243,24 +226,18 @@
     function updateReferralUI(profile) {
         const count = profile.ref_count || 0;
         const progress = Math.min((count / 3) * 100, 100);
-        document.getElementById('ref-status').innerText = `${count}/3`;
-        document.getElementById('ref-fill').style.width = `${progress}%`;
-        
-        // Якщо вже VIP, можна приховати банер
-        if (profile.is_vip) {
+        if (document.getElementById('ref-status')) document.getElementById('ref-status').innerText = `${count}/3`;
+        if (document.getElementById('ref-fill')) document.getElementById('ref-fill').style.width = `${progress}%`;
+        if (profile.is_vip && document.getElementById('ref-banner')) {
             document.getElementById('ref-banner').style.display = 'none';
         }
     }
 
     function shareRefLink() {
         const refLink = `https://t.me/${botUsername}?start=${userId}`;
-        const text = `Заціни круті прогнози на спорт! Заходь за моїм посиланням: ${refLink}`;
-        
-        // Використовуємо вбудований метод TG для розсилки посилання друзям
-        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent('Отримуй точні прогнози на спорт разом зі мною!')}`);
+        const text = `Заціни круті прогнози на спорт! Заходь за моїм посиланням:`;
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
     }
-
-    // --- Далі ваш існуючий код без змін ---
 
     function calculateStats(predictions) {
         const finished = predictions.filter(p => p.status === 'win' || p.status === 'loss');
@@ -275,13 +252,13 @@
         document.getElementById('stat-total-bets').innerText = finished.length;
         document.getElementById('stat-avg-odds').innerText = avgOdds;
         document.getElementById('stat-roi').innerText = (roi >= 0 ? '+' : '') + roi + '%';
-        const formContainer = document.getElementById('form-streak');
-        formContainer.innerHTML = '';
+        const formRow = document.getElementById('form-streak');
+        formRow.innerHTML = '';
         finished.slice(0, 10).forEach(p => {
             const dot = document.createElement('div');
             dot.className = `form-dot ${p.status === 'win' ? 'dot-win' : 'dot-loss'}`;
             dot.innerText = p.status === 'win' ? 'W' : 'L';
-            formContainer.appendChild(dot);
+            formRow.appendChild(dot);
         });
         updateCategoryStat('sport', finished.filter(p => p.type === 'sport'));
         updateCategoryStat('esport', finished.filter(p => p.type === 'esport'));
@@ -350,18 +327,8 @@
 
     window.buyVip = function() { tg.showConfirm("Бажаєте активувати VIP-підписку?"); }
 
-    document.getElementById('btn-sport').onclick = () => { 
-        currentType = 'sport'; 
-        document.getElementById('btn-sport').classList.add('active');
-        document.getElementById('btn-esport').classList.remove('active');
-        loadData(); 
-    };
-    document.getElementById('btn-esport').onclick = () => { 
-        currentType = 'esport'; 
-        document.getElementById('btn-esport').classList.add('active');
-        document.getElementById('btn-sport').classList.remove('active');
-        loadData(); 
-    };
+    document.getElementById('btn-sport').onclick = () => { currentType = 'sport'; document.getElementById('btn-sport').classList.add('active'); document.getElementById('btn-esport').classList.remove('active'); loadData(); };
+    document.getElementById('btn-esport').onclick = () => { currentType = 'esport'; document.getElementById('btn-esport').classList.add('active'); document.getElementById('btn-sport').classList.remove('active'); loadData(); };
 
     loadData();
 </script>
