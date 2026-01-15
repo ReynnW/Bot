@@ -12,7 +12,7 @@
             --card-bg: #2c2c2e;
             --text-main: #ffffff;
             --text-hint: #8e8e93;
-            --accent: #007aff;
+            --accent: #007aff; /* Голубий колір для лого */
             --win: #34c759;
             --loss: #ff3b30;
             --gold: #ffcc00;
@@ -35,7 +35,21 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 8px; }
-        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; background: #333; }
+
+        /* НОВЕ: Стиль для логотипа через маску */
+        .app-logo {
+            width: 28px; height: 28px;
+            background-color: var(--accent); /* Колір заливки (голубий) */
+            /* Використовуємо картинку як маску, щоб вирізати форму */
+            -webkit-mask-image: url('https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png');
+            mask-image: url('https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        
         .app-title { font-size: 1.1rem; font-weight: 800; }
 
         .balance-badge {
@@ -70,7 +84,8 @@
         .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
 
         .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
-        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--accent); object-fit: cover; }
+        /* НОВЕ: Стиль аватара з обводкою */
+        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--card-bg); outline: 2px solid var(--accent); object-fit: cover; background: var(--card-bg); padding: 2px; }
         .vip-status { font-size: 0.8rem; font-weight: bold; padding: 6px 16px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
         .vip-active { background: var(--gold); color: #000; }
 
@@ -89,7 +104,7 @@
 
 <header class="app-header">
     <div class="header-left">
-        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="L">
+        <div class="app-logo"></div>
         <div class="app-title">Bets Store</div>
     </div>
     <div class="balance-badge">
@@ -123,7 +138,7 @@
 
     <div id="profile" class="tab-content">
         <div class="profile-card">
-            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2c2c2e&color=fff" class="avatar">
+            <img id="user-avatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e8e93'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
             <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
             <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
             <div id="vip-buy-section">
@@ -143,19 +158,18 @@
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    tg.headerColor = '#1c1c1e'; // Колір системного хедера Telegram
 
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
     
-    // ВИПРАВЛЕНО: Змінено назву змінної, щоб уникнути конфлікту з бібліотекою
     const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentType = 'sport';
-    let userId = tg.initDataUnsafe?.user?.id || 0;
+    let userId = tg.initDataUnsafe?.user?.id;
 
     async function loadData() {
         try {
-            // Завантаження прогнозів (сортування за ID)
             const { data: predictions, error: pError } = await sbClient
                 .from('predictions')
                 .select('*')
@@ -165,7 +179,6 @@
                 renderLists(predictions);
             }
 
-            // Завантаження профілю
             if (userId) {
                 const { data: profile, error: uError } = await sbClient
                     .from('profiles')
@@ -178,7 +191,7 @@
                 }
             }
         } catch (e) {
-            console.error("Критична помилка завантаження:", e);
+            console.error("Erro:", e);
         }
         setupUserInfo();
     }
@@ -208,6 +221,8 @@
         const active = data.filter(p => p.type === currentType && p.status === 'active');
         const finished = data.filter(p => p.type === currentType && p.status !== 'active').slice(0, 15);
 
+        if (active.length === 0) activeContainer.innerHTML = '<div style="text-align:center; color:var(--text-hint); padding: 20px;">Немає активних прогнозів</div>';
+        
         active.forEach(p => activeContainer.appendChild(createCard(p)));
         finished.forEach(p => finishedContainer.appendChild(createCard(p)));
     }
@@ -237,11 +252,11 @@
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
             if (nameEl) nameEl.innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            // Якщо у користувача є фото, замінюємо заглушку
             if (avatarEl && user.photo_url) avatarEl.src = user.photo_url;
         }
     }
 
-    // ВИПРАВЛЕНО: Функції винесено в глобальну область видимості
     window.showTab = function(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         const target = document.getElementById(tabId);
