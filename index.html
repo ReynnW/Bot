@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bet Analytics App</title>
+    <title>Bets Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -23,89 +23,123 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 0;
-            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            position: sticky; top: 0;
+            background: rgba(28, 28, 30, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; border-bottom: 1px solid #333; z-index: 100;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .app-logo { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
+        .app-title { font-size: 1.1rem; font-weight: 800; }
+
+        .balance-badge {
+            background: var(--card-bg); padding: 6px 12px; border-radius: 100px;
+            display: flex; align-items: center; gap: 6px; font-weight: bold; border: 1px solid rgba(255,204,0,0.2);
         }
 
         .container { padding: 16px; padding-bottom: 100px; }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* Tabs & Animation */
+        .tab-content { display: none; opacity: 0; transform: translateY(10px); }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; }
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
         .filter-btn {
-            background: var(--card-bg); border: 1px solid #444; color: var(--text-main);
-            padding: 8px 16px; border-radius: 20px; font-size: 0.9rem;
+            flex: 1; background: var(--card-bg); border: 1px solid #444; color: var(--text-main);
+            padding: 10px; border-radius: 12px; transition: 0.2s;
         }
-        .filter-btn.active { background: var(--accent); border-color: var(--accent); }
+        .filter-btn.active { background: var(--accent); border-color: var(--accent); font-weight: bold; }
 
+        /* Section Titles */
+        .section-label { font-size: 0.85rem; color: var(--text-hint); text-transform: uppercase; margin: 20px 0 10px 4px; letter-spacing: 1px; }
+
+        /* Cards */
         .card {
-            background: var(--card-bg); border-radius: 12px; padding: 16px;
-            margin-bottom: 12px; border-left: 4px solid var(--accent);
+            background: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px;
+            border-left: 4px solid var(--accent); position: relative;
         }
         .card.vip { border-left-color: var(--gold); }
         .card.finished { border-left-color: var(--text-hint); opacity: 0.7; }
         
         .card-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-hint); margin-bottom: 8px; }
         .card-teams { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
-        .card-result { font-weight: bold; margin-top: 8px; }
+        .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
 
-        .stats-box { background: var(--card-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; }
-        .progress-container { height: 8px; background: #444; border-radius: 4px; margin: 10px 0; }
-        .progress-bar { height: 100%; border-radius: 4px; background: var(--win); }
+        /* Profile */
+        .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; border: 3px solid var(--accent); }
+        .vip-status { font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
+        .vip-active { background: var(--gold); color: #000; }
 
-        .profile-info { text-align: center; padding: 20px 0; }
-        .status-badge { display: inline-block; padding: 5px 15px; border-radius: 10px; background: var(--gold); color: black; font-weight: bold; }
-        .action-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: bold; }
-
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; background: #2c2c2e;
-            display: flex; border-top: 1px solid #444; padding: 10px 0;
+        .buy-vip-btn {
+            width: 100%; background: linear-gradient(45deg, var(--gold), #ffaa00);
+            color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 10px;
         }
-        .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.8rem; }
+
+        /* Nav */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #2c2c2e; display: flex; border-top: 1px solid #444; padding: 10px 0; }
+        .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.75rem; }
         .nav-btn.active { color: var(--accent); }
         .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 4px; }
-
-        #loading { text-align: center; color: var(--text-hint); padding: 20px; }
     </style>
 </head>
 <body>
 
+<header class="app-header">
+    <div class="header-left">
+        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/logo.png" class="app-logo" alt="Logo">
+        <div class="app-title">Bets Store</div>
+    </div>
+    <div class="balance-badge">
+        <span>⭐</span><span id="header-balance">0</span>
+    </div>
+</header>
+
 <div class="container">
-    
     <div id="prognosis" class="tab-content active">
         <div class="filter-bar">
             <button class="filter-btn active" id="btn-sport">⚽️ Спорт</button>
             <button class="filter-btn" id="btn-esport">🎮 Кіберспорт</button>
         </div>
 
-        <h3>Актуальні</h3>
-        <div id="loading">Завантаження прогнозів...</div>
-        <div id="list-container"></div>
+        <div class="section-label">Актуальні</div>
+        <div id="active-list"></div>
+
+        <div class="section-label">Завершені (Останні 15)</div>
+        <div id="finished-list"></div>
     </div>
 
     <div id="stats" class="tab-content">
         <h3>Аналітика успіху</h3>
         <div class="stats-box">
-            <div style="display:flex; justify-content: space-between">
-                <span>⚽️ Спорт</span><span style="color: var(--win)">78%</span>
-            </div>
+            <div style="display:flex; justify-content: space-between"><span>⚽️ Спорт</span><span style="color: var(--win)">78%</span></div>
             <div class="progress-container"><div class="progress-bar" style="width: 78%"></div></div>
         </div>
         <div class="stats-box">
-            <div style="display:flex; justify-content: space-between">
-                <span>🎮 Кіберспорт</span><span style="color: var(--win)">62%</span>
-            </div>
+            <div style="display:flex; justify-content: space-between"><span>🎮 Кіберспорт</span><span style="color: var(--win)">62%</span></div>
             <div class="progress-container"><div class="progress-bar" style="width: 62%"></div></div>
         </div>
     </div>
 
     <div id="profile" class="tab-content">
-        <div class="profile-info">
-            <div style="font-size: 3rem; margin-bottom: 10px;">👤</div>
-            <div id="user-name" style="font-weight: bold; font-size: 1.2rem;">Користувач</div>
-            <div class="status-badge" style="margin-top: 10px;">VIP ПІДПИСКА АКТИВНА</div>
+        <div class="profile-card">
+            <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=007aff&color=fff" class="avatar">
+            <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
+            <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
+            
+            <div id="vip-buy-section">
+                <button class="buy-vip-btn" onclick="buyVip()">КУПИТИ VIP-ПІДПИСКУ</button>
+            </div>
         </div>
-        <button class="action-btn" onclick="tg.showAlert('Тут буде ваша історія')">📜 Історія прогнозів</button>
+        <button class="action-btn" style="background: var(--card-bg); border: 1px solid #444;" onclick="tg.showAlert('Тут буде історія')">📜 Мої покупки</button>
     </div>
 </div>
 
@@ -119,101 +153,87 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- ВСТАВТЕ ВАШІ ДАНІ ТУТ ---
     const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
-    // ---------------------------
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ВИПРАВЛЕНО: Ми використовуємо window.supabase, щоб уникнути конфлікту імен
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let currentFilter = 'sport';
+    let currentType = 'sport';
+    let isUserVip = false; // Потім беремо з бази
 
-    async function loadData() {
-        const loadingEl = document.getElementById('loading');
-        if (loadingEl) loadingEl.style.display = 'block';
+    async function loadAll() {
+        const { data, error } = await supabase.from('predictions').select('*').order('created_at', { ascending: false });
+        if (!error) renderLists(data);
+        setupProfile();
+    }
+
+    function renderLists(data) {
+        const activeContainer = document.getElementById('active-list');
+        const finishedContainer = document.getElementById('finished-list');
+        activeContainer.innerHTML = '';
+        finishedContainer.innerHTML = '';
+
+        const active = data.filter(p => p.type === currentType && p.status === 'active');
+        const finished = data.filter(p => p.type === currentType && p.status !== 'active').slice(0, 15);
+
+        active.forEach(p => activeContainer.appendChild(createCard(p)));
+        finished.forEach(p => finishedContainer.appendChild(createCard(p)));
+    }
+
+    function createCard(p) {
+        const card = document.createElement('div');
+        card.className = `card ${p.isVip ? 'vip' : ''} ${p.status !== 'active' ? 'finished' : ''}`;
         
-        // ВИПРАВЛЕНО: Використовуємо supabaseClient замість supabase
-        const { data, error } = await supabaseClient
-            .from('predictions')
-            .select('*')
-            .order('id', { ascending: false });
+        const resText = p.status === 'win' ? '<div class="card-result" style="color: var(--win)">✅ ВИГРАШ</div>' : 
+                        p.status === 'loss' ? '<div class="card-result" style="color: var(--loss)">❌ ПРОГРАШ</div>' : '';
 
-        if (error) {
-            console.error('Помилка Supabase:', error);
-            if (loadingEl) loadingEl.innerText = 'Помилка завантаження. Перевірте консоль.';
-            return;
-        }
-
-        render(data || [], currentFilter);
-        if (loadingEl) loadingEl.style.display = 'none';
+        card.innerHTML = `
+            <div class="card-header">
+                <span>${p.isVip ? '⭐️ VIP' : 'FREE'}</span>
+                <span>${p.time || ''}</span>
+            </div>
+            <div class="card-teams">${p.teams}</div>
+            <div>Ставка: ${p.bet} • Кеф ${p.odds}</div>
+            ${resText}
+        `;
+        return card;
     }
 
-    function render(allPredictions, filterType) {
-        const container = document.getElementById('list-container');
-        if (!container) return;
-        container.innerHTML = '';
-
-        const filtered = allPredictions.filter(p => p.type === filterType);
-
-        if (filtered.length === 0) {
-            container.innerHTML = '<div style="color: grey; text-align: center; padding: 20px;">Прогнозів поки немає</div>';
-            return;
+    function setupProfile() {
+        if (tg.initDataUnsafe?.user) {
+            const user = tg.initDataUnsafe.user;
+            document.getElementById('user-full-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            if (user.photo_url) document.getElementById('user-avatar').src = user.photo_url;
+            
+            // Логіка кнопки VIP (припустимо, беремо з бази)
+            isUserVip = false; // Замініть на реальну перевірку
+            const label = document.getElementById('vip-label');
+            const buyBtn = document.getElementById('vip-buy-section');
+            
+            if (isUserVip) {
+                label.innerText = "👑 VIP-ПІДПИСНИК";
+                label.classList.add('vip-active');
+                buyBtn.style.display = 'none';
+            }
         }
-
-        filtered.forEach(p => {
-            const card = document.createElement('div');
-            let cardClass = 'card';
-            if (p.isVip) cardClass += ' vip';
-            if (p.status !== 'active') cardClass += ' finished';
-            
-            card.className = cardClass;
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <span>${p.isVip ? '⭐️ VIP' : 'БЕЗКОШТОВНО'}</span>
-                    <span>${p.time || ''}</span>
-                </div>
-                <div class="card-teams">${p.teams || 'Без назви'}</div>
-                <div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>
-                ${p.status === 'win' ? '<div class="card-result" style="color: var(--win)">✅ ВИГРАШ</div>' : ''}
-                ${p.status === 'loss' ? '<div class="card-result" style="color: var(--loss)">❌ ПРОГРАШ</div>' : ''}
-            `;
-            container.appendChild(card);
-        });
     }
 
-    // Функція перемикання вкладок
     function showTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        const targetTab = document.getElementById(tabId);
-        if (targetTab) targetTab.classList.add('active');
-        
+        document.getElementById(tabId).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        tg.HapticFeedback.selectionChanged();
+        tg.HapticFeedback.impactOccurred('medium');
     }
 
-    // Прив'язка кнопок фільтрів
-    document.getElementById('btn-sport').onclick = function() {
-        currentFilter = 'sport';
-        document.getElementById('btn-esport').classList.remove('active');
-        this.classList.add('active');
-        loadData();
-    };
+    document.getElementById('btn-sport').onclick = () => { currentType = 'sport'; updateFilters('btn-sport', 'btn-esport'); loadAll(); };
+    document.getElementById('btn-esport').onclick = () => { currentType = 'esport'; updateFilters('btn-esport', 'btn-sport'); loadAll(); };
 
-    document.getElementById('btn-esport').onclick = function() {
-        currentFilter = 'esport';
-        document.getElementById('btn-sport').classList.remove('active');
-        this.classList.add('active');
-        loadData();
-    };
-
-    // Запуск
-    loadData();
-
-    if (tg.initDataUnsafe?.user) {
-        document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
+    function updateFilters(act, inact) {
+        document.getElementById(act).classList.add('active');
+        document.getElementById(inact).classList.remove('active');
     }
+
+    loadAll();
 </script>
 </body>
 </html>
