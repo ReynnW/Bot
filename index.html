@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -22,27 +23,53 @@
             font-family: -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
         }
 
         /* Header */
         .app-header {
-            position: sticky; top: 0;
+            position: sticky;
+            top: 0;
             background: rgba(28, 28, 30, 0.9);
             backdrop-filter: blur(10px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; border-bottom: 1px solid #333; z-index: 100;
-        }
-        .header-left { display: flex; align-items: center; gap: 8px; }
-        .app-logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; }
-        .app-title { font-size: 1.1rem; font-weight: 800; }
-        .balance-badge {
-            background: var(--card-bg); padding: 6px 12px; border-radius: 100px;
-            display: flex; align-items: center; gap: 6px; font-weight: bold; border: 1px solid rgba(255,204,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #333;
+            z-index: 100;
         }
 
-        .container { padding: 16px; padding-bottom: 100px; }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .app-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .balance-badge {
+            background: var(--card-bg);
+            padding: 6px 12px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
 
         /* Referral Banner */
         .referral-banner {
@@ -54,240 +81,697 @@
             position: relative;
             overflow: hidden;
         }
+
         .referral-banner::after {
-            content: '🎁'; position: absolute; right: -10px; bottom: -10px; font-size: 4rem; opacity: 0.1;
+            content: '🎁';
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            font-size: 4rem;
+            opacity: 0.2;
         }
-        .ref-title { color: var(--gold); font-weight: 800; font-size: 1rem; margin-bottom: 4px; display: block; }
-        .ref-text { font-size: 0.8rem; color: var(--text-main); line-height: 1.3; margin-bottom: 12px; display: block; }
-        .ref-progress-box { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; position: relative; z-index: 1; }
-        .ref-progress-bar { flex: 1; height: 8px; background: #444; border-radius: 4px; overflow: hidden; }
-        .ref-progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s; }
-        .ref-count-text { font-size: 0.8rem; font-weight: bold; color: var(--gold); min-width: 30px; }
+
+        .ref-title {
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .ref-text {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            line-height: 1.3;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .ref-progress-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .ref-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #444;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .ref-progress-fill {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: 0.5s;
+        }
+
+        .ref-count-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: var(--gold);
+            min-width: 30px;
+        }
+
         .ref-btn {
-            background: var(--gold); color: #000; border: none; padding: 10px 16px; border-radius: 10px;
-            font-size: 0.85rem; font-weight: bold; cursor: pointer; width: 100%; position: relative; z-index: 1;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
         }
 
-        .tab-content { display: none; opacity: 0; transform: translateY(10px); }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease forwards; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .container {
+            padding: 16px;
+            padding-bottom: 100px;
+        }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); padding: 16px; border-radius: 16px; text-align: center; border: 1px solid #333; }
-        .stat-value { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
-        .stat-label { font-size: 0.7rem; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.5px; }
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
 
-        .form-row { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; padding-bottom: 5px; }
-        .form-dot { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #fff; flex-shrink: 0; }
-        .dot-win { background: var(--win); }
-        .dot-loss { background: var(--loss); }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease forwards;
+        }
 
-        .detailed-stats { background: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
-        .progress-info { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; }
-        .progress-container { height: 8px; background: #444; border-radius: 4px; margin: 4px 0; overflow: hidden; }
-        .progress-bar { height: 100%; border-radius: 4px; background: var(--win); transition: width 0.5s ease; }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
-        .filter-btn { flex: 1; background: var(--card-bg); border: 1px solid #444; color: var(--text-main); padding: 10px; border-radius: 12px; transition: 0.2s; cursor: pointer; text-align: center; }
-        .filter-btn.active { background: var(--accent); border-color: var(--accent); font-weight: bold; }
-        .section-label { font-size: 0.85rem; color: var(--text-hint); text-transform: uppercase; margin: 20px 0 10px 4px; letter-spacing: 1px; }
-        .card { background: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--accent); position: relative; }
-        .card.vip { border-left-color: var(--gold); }
-        .card.finished { border-left-color: var(--text-hint); opacity: 0.7; }
-        .card-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-hint); margin-bottom: 8px; }
-        .card-teams { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
-        .card-result { font-weight: 800; margin-top: 10px; font-size: 0.9rem; }
-        .profile-card { background: var(--card-bg); border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 20px; }
-        .avatar-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px; }
-        .avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--card-bg); outline: 2px solid var(--accent); object-fit: cover; background: var(--bg-color); }
-        .vip-status { font-size: 0.8rem; font-weight: bold; padding: 6px 16px; border-radius: 20px; background: #333; display: inline-block; margin-top: 8px; }
-        .vip-active { background: var(--gold); color: #000; }
-        .buy-vip-btn { width: 100%; background: linear-gradient(45deg, var(--gold), #ffaa00); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 15px; cursor: pointer; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #2c2c2e; display: flex; border-top: 1px solid #444; padding: 10px 0; z-index: 1000; }
-        .nav-btn { flex: 1; background: none; border: none; color: var(--text-hint); text-align: center; font-size: 0.75rem; cursor: pointer; }
-        .nav-btn.active { color: var(--accent); }
-        .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 4px; }
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-hint);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .form-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .dot-win {
+            background: var(--win);
+        }
+
+        .dot-loss {
+            background: var(--loss);
+        }
+
+        .detailed-stats {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .progress-container {
+            height: 8px;
+            background: #444;
+            border-radius: 4px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--win);
+            transition: width 0.5s ease;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid #444;
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 12px;
+            transition: 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            font-weight: bold;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            color: var(--text-hint);
+            text-transform: uppercase;
+            margin: 20px 0 10px 4px;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+            position: relative;
+        }
+
+        .card.vip {
+            border-left-color: var(--gold);
+        }
+
+        .card.finished {
+            border-left-color: var(--text-hint);
+            opacity: 0.7;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-hint);
+            margin-bottom: 8px;
+        }
+
+        .card-teams {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .card-result {
+            font-weight: 800;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg);
+            outline: 2px solid var(--accent);
+            object-fit: cover;
+            background: var(--bg-color);
+        }
+
+        .vip-status {
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #333;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .vip-active {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .buy-vip-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--gold), #ffaa00);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #2c2c2e;
+            display: flex;
+            border-top: 1px solid #444;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-hint);
+            text-align: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .nav-btn.active {
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
+
 <body>
 
-<header class="app-header">
-    <div class="header-left">
-        <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png" class="app-logo" alt="Logo">
-        <div class="app-title">Bets Store</div>
-    </div>
-    <div class="balance-badge">
-        <span>⭐</span><span id="header-balance">0</span>
-    </div>
-</header>
+    <header class="app-header">
+        <div class="header-left">
+            <img src="https://raqujgvmdfcarlzqbpbs.supabase.co/storage/v1/object/public/assets/Icon.png"
+                class="app-logo" alt="Logo">
+            <div class="app-title">Bets Store</div>
+        </div>
+        <div class="balance-badge">
+            <span>⭐</span><span id="header-balance">0</span>
+        </div>
+    </header>
 
-<div class="container">
-    <div id="prognosis" class="tab-content active">
-        <div class="referral-banner" id="ref-banner">
-            <span class="ref-title">VIP БЕЗКОШТОВНО 🎁</span>
-            <span class="ref-text">Запроси 3 друзів, які підпишуться на канал, та отримай VIP-статус!</span>
-            <div class="ref-progress-box">
-                <div class="ref-progress-bar"><div class="ref-progress-fill" id="ref-fill"></div></div>
-                <span class="ref-count-text" id="ref-status">0/3</span>
+    <div class="container">
+        <div id="prognosis" class="tab-content active">
+
+            <div class="referral-banner" id="ref-banner">
+                <span class="ref-title">VIP БЕЗКОШТОВНО 🎁</span>
+                <span class="ref-text">Запроси 3 друзів у проект та отримай VIP-статус на 14 днів!</span>
+                <div class="ref-progress-box">
+                    <div class="ref-progress-bar">
+                        <div class="ref-progress-fill" id="ref-fill"></div>
+                    </div>
+                    <span class="ref-count-text" id="ref-status">0/3</span>
+                </div>
+                <button class="ref-btn" onclick="shareRefLink()">ЗАПРОСИТИ ДРУЗІВ</button>
             </div>
-            <button class="ref-btn" onclick="shareRefLink()">ЗАПРОСИТИ ДРУЗІВ</button>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" id="btn-sport">⚽️ Спорт</button>
+                <button class="filter-btn" id="btn-esport">🎮 Кіберспорт</button>
+            </div>
+            <div class="section-label">Актуальні</div>
+            <div id="active-list"></div>
+            <div class="section-label">Завершені (Останні 15)</div>
+            <div id="finished-list"></div>
         </div>
 
-        <div class="filter-bar">
-            <button class="filter-btn active" id="btn-sport">⚽️ Спорт</button>
-            <button class="filter-btn" id="btn-esport">🎮 Кіберспорт</button>
+        <div id="stats" class="tab-content">
+            <div class="section-label">Загальний дашборд</div>
+            <div class="stats-grid">
+                <div class="stat-card"><span class="stat-value" id="stat-total-winrate">0%</span><span
+                        class="stat-label">Вінрейт</span></div>
+                <div class="stat-card"><span class="stat-value" style="color: var(--gold);"
+                        id="stat-roi">+0%</span><span class="stat-label">ROI</span></div>
+                <div class="stat-card"><span class="stat-value" id="stat-avg-odds">0.0</span><span
+                        class="stat-label">Сер. кеф</span></div>
+                <div class="stat-card"><span class="stat-value" id="stat-total-bets">0</span><span
+                        class="stat-label">Матчів</span></div>
+            </div>
+            <div class="section-label">Форма</div>
+            <div class="detailed-stats">
+                <div class="form-row" id="form-streak"></div>
+            </div>
+            <div class="section-label">За категоріями</div>
+            <div class="detailed-stats">
+                <div class="progress-info"><span>⚽️ Спорт</span><span style="color: var(--win)"
+                        id="winrate-sport">0%</span></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="bar-sport" style="width: 0%"></div>
+                </div>
+                <div style="margin-top: 20px;" class="progress-info"><span>🎮 Кіберспорт</span><span
+                        style="color: var(--win)" id="winrate-esport">0%</span></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="bar-esport" style="width: 0%; background: var(--accent);"></div>
+                </div>
+            </div>
         </div>
-        <div id="active-list"></div>
-        <div class="section-label">Завершені (Останні 15)</div>
-        <div id="finished-list"></div>
+
+        <div id="profile" class="tab-content">
+            <div class="profile-card">
+                <div class="avatar-container">
+                    <img id="user-avatar" class="avatar"
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e8e93'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
+                </div>
+                <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
+                <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
+                <div id="vip-buy-section">
+                    <button class="buy-vip-btn" onclick="buyVip()">КУПИТИ VIP-ПІДПИСКУ</button>
+                </div>
+            </div>
+            <button class="buy-vip-btn" style="background: var(--card-bg); color: white; border: 1px solid #444;"
+                onclick="window.Telegram.WebApp.showAlert('Історія покупок поки порожня')">📜 Мої покупки</button>
+        </div>
     </div>
 
-    <div id="stats" class="tab-content">
-        <div class="section-label">Загальний дашборд</div>
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-value" id="stat-total-winrate">0%</span><span class="stat-label">Вінрейт</span></div>
-            <div class="stat-card"><span class="stat-value" style="color: var(--gold);" id="stat-roi">+0%</span><span class="stat-label">ROI</span></div>
-            <div class="stat-card"><span class="stat-value" id="stat-avg-odds">0.0</span><span class="stat-label">Сер. кеф</span></div>
-            <div class="stat-card"><span class="stat-value" id="stat-total-bets">0</span><span class="stat-label">Матчів</span></div>
-        </div>
-        <div class="section-label">Форма (Останні 10)</div>
-        <div class="detailed-stats"><div class="form-row" id="form-streak"></div></div>
-    </div>
+    <nav class="nav-bar">
+        <button class="nav-btn" onclick="showTab('stats', this)"><span class="nav-icon">📈</span>Статистика</button>
+        <button class="nav-btn active" onclick="showTab('prognosis', this)"><span
+                class="nav-icon">🎯</span>Прогнози</button>
+        <button class="nav-btn" onclick="showTab('profile', this)"><span class="nav-icon">👤</span>Кабінет</button>
+    </nav>
 
-    <div id="profile" class="tab-content">
-        <div class="profile-card">
-            <div class="avatar-container"><img id="user-avatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238e8e93'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"></div>
-            <h2 id="user-full-name" style="margin: 0;">Користувач</h2>
-            <div id="vip-label" class="vip-status">ЗВИЧАЙНИЙ АККАУНТ</div>
-            <div id="vip-buy-section"><button class="buy-vip-btn" onclick="buyVip()">КУПИТИ VIP-ПІДПИСКУ</button></div>
-        </div>
-        <button class="buy-vip-btn" style="background: var(--card-bg); color: white; border: 1px solid #444;" onclick="tg.showAlert('Історія порожня')">📜 Мої покупки</button>
-    </div>
-</div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.headerColor = '#1c1c1e';
 
-<nav class="nav-bar">
-    <button class="nav-btn" onclick="showTab('stats', this)"><span class="nav-icon">📈</span>Статистика</button>
-    <button class="nav-btn active" onclick="showTab('prognosis', this)"><span class="nav-icon">🎯</span>Прогнози</button>
-    <button class="nav-btn" onclick="showTab('profile', this)"><span class="nav-icon">👤</span>Кабінет</button>
-</nav>
+        const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
+        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.headerColor = '#1c1c1e';
+        // URL вашого бота API (змініть на реальний URL сервера)
+        const BOT_API_URL = 'https://your-server-url.com'; // Замініть на реальний URL
+        const CHANNEL_LINK = 'https://t.me/+KTUc5I9BZtw2NDYy';
 
-    const SUPABASE_URL = 'https://raqujgvmdfcarlzqbpbs.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
-    const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let currentType = 'sport';
+        let userId = tg.initDataUnsafe?.user?.id;
+        // ВАЖЛИВО: Замініть на реальний юзернейм вашого бота
+        let botUsername = "Cybernewsuacs2";
 
-    let currentType = 'sport';
-    let userId = tg.initDataUnsafe?.user?.id;
-    let botUsername = "testbsminiappbot"; 
+        // Функція створення блокуючого оверлея
+        function showSubscriptionOverlay() {
+            const overlay = document.createElement('div');
+            overlay.id = 'subscription-overlay';
+            overlay.style.cssText = `
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(28, 28, 30, 0.98);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        `;
+            overlay.innerHTML = `
+            <div style="font-size: 4rem; margin-bottom: 20px;">🔒</div>
+            <h2 style="color: white; margin-bottom: 10px;">Доступ обмежено</h2>
+            <p style="color: #8e8e93; margin-bottom: 20px;">Щоб користуватися додатком, підпишіться на наш канал</p>
+            <a href="${CHANNEL_LINK}" style="
+                background: linear-gradient(135deg, #007aff, #5856d6);
+                color: white;
+                padding: 16px 32px;
+                border-radius: 12px;
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 1rem;
+                margin-bottom: 15px;
+                display: inline-block;
+            ">📢 Підписатися на канал</a>
+            <button onclick="recheckSubscription()" style="
+                background: #2c2c2e;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 10px;
+                border: 1px solid #444;
+                cursor: pointer;
+                font-size: 0.9rem;
+            ">✅ Перевірити підписку</button>
+            <p style="color: #8e8e93; font-size: 0.75rem; margin-top: 20px;">
+                Після підписки натисніть "Перевірити підписку"
+            </p>
+        `;
+            document.body.appendChild(overlay);
+        }
 
-    async function loadData() {
-        try {
-            const { data: predictions } = await sbClient.from('predictions').select('*').order('id', { ascending: false });
-            if (predictions) { renderLists(predictions); calculateStats(predictions); }
-            
-            if (userId) {
-                const { data: profile } = await sbClient.from('profiles').select('*').eq('id', userId).single();
-                if (profile) { 
-                    updateProfileUI(profile); 
-                    updateReferralUI(profile); 
-                }
+        function hideSubscriptionOverlay() {
+            const overlay = document.getElementById('subscription-overlay');
+            if (overlay) overlay.remove();
+        }
+
+        // Функція перевірки підписки через Supabase (альтернативний метод)
+        async function checkSubscriptionViaSupabase() {
+            if (!userId) return false;
+
+            try {
+                const { data: profile, error } = await sbClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                // Якщо профіль існує - користувач пройшов перевірку в боті
+                return !error && profile;
+            } catch (e) {
+                console.error("Subscription check error:", e);
+                return false;
             }
-        } catch (e) { console.error(e); }
-        setupUserInfo();
-    }
-
-    function updateReferralUI(profile) {
-        const count = profile.ref_count || 0;
-        const progress = Math.min((count / 3) * 100, 100);
-        document.getElementById('ref-status').innerText = `${count}/3`;
-        document.getElementById('ref-fill').style.width = `${progress}%`;
-        if (profile.is_vip) document.getElementById('ref-banner').style.display = 'none';
-    }
-
-    function shareRefLink() {
-        const refLink = `https://t.me/${botUsername}?start=${userId}`;
-        const text = `Заціни круті прогнози на спорт! Заходь за моїм посиланням:`;
-        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
-    }
-
-    function calculateStats(predictions) {
-        const finished = predictions.filter(p => p.status === 'win' || p.status === 'loss');
-        if (finished.length === 0) return;
-        const wins = finished.filter(p => p.status === 'win').length;
-        const winrate = Math.round((wins / finished.length) * 100);
-        const totalOdds = finished.reduce((sum, p) => sum + parseFloat(p.odds || 0), 0);
-        const avgOdds = (totalOdds / finished.length).toFixed(2);
-        const winOddsSum = finished.filter(p => p.status === 'win').reduce((sum, p) => sum + parseFloat(p.odds || 0), 0);
-        const roi = (((winOddsSum / finished.length) - 1) * 100).toFixed(1);
-        
-        document.getElementById('stat-total-winrate').innerText = winrate + '%';
-        document.getElementById('stat-total-bets').innerText = finished.length;
-        document.getElementById('stat-avg-odds').innerText = avgOdds;
-        document.getElementById('stat-roi').innerText = (roi >= 0 ? '+' : '') + roi + '%';
-
-        const formRow = document.getElementById('form-streak');
-        formRow.innerHTML = '';
-        finished.slice(0, 10).forEach(p => {
-            const dot = document.createElement('div');
-            dot.className = `form-dot ${p.status === 'win' ? 'dot-win' : 'dot-loss'}`;
-            dot.innerText = p.status === 'win' ? 'W' : 'L';
-            formRow.appendChild(dot);
-        });
-    }
-
-    function updateProfileUI(profile) {
-        document.getElementById('header-balance').innerText = profile.balance || '0';
-        if (profile.is_vip) {
-            document.getElementById('vip-label').innerText = "👑 VIP-ПІДПИСНИК";
-            document.getElementById('vip-label').classList.add('vip-active');
-            document.getElementById('vip-buy-section').style.display = 'none';
         }
-    }
 
-    function renderLists(data) {
-        const activeContainer = document.getElementById('active-list');
-        const finishedContainer = document.getElementById('finished-list');
-        activeContainer.innerHTML = ''; finishedContainer.innerHTML = '';
-        const active = data.filter(p => p.type === currentType && p.status === 'active');
-        const finished = data.filter(p => p.type === currentType && p.status !== 'active').slice(0, 15);
-        if (active.length === 0) activeContainer.innerHTML = '<div style="text-align:center; color:var(--text-hint); padding: 20px;">Немає актуальних прогнозів</div>';
-        active.forEach(p => activeContainer.appendChild(createCard(p)));
-        finished.forEach(p => finishedContainer.appendChild(createCard(p)));
-    }
-
-    function createCard(p) {
-        const card = document.createElement('div');
-        card.className = `card ${p.isVip ? 'vip' : ''} ${p.status !== 'active' ? 'finished' : ''}`;
-        const resText = p.status === 'win' ? '<div class="card-result" style="color: var(--win)">✅ ВИГРАШ</div>' : 
-                        p.status === 'loss' ? '<div class="card-result" style="color: var(--loss)">❌ ПРОГРАШ</div>' : '';
-        card.innerHTML = `<div class="card-header"><span>${p.isVip ? '⭐️ VIP' : 'FREE'}</span><span>${p.time || ''}</span></div><div class="card-teams">${p.teams || 'Матч'}</div><div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>${resText}`;
-        return card;
-    }
-
-    function setupUserInfo() {
-        if (tg.initDataUnsafe?.user) {
-            const user = tg.initDataUnsafe.user;
-            document.getElementById('user-full-name').innerText = (user.first_name + " " + (user.last_name || "")).trim();
-            if (user.photo_url) document.getElementById('user-avatar').src = user.photo_url;
+        async function recheckSubscription() {
+            const isSubscribed = await checkSubscriptionViaSupabase();
+            if (isSubscribed) {
+                hideSubscriptionOverlay();
+                loadData();
+                tg.showAlert("✅ Доступ дозволено!");
+            } else {
+                tg.showAlert("❌ Ви ще не зареєстровані. Спершу напишіть боту /start та підпишіться на канал.");
+            }
         }
-    }
 
-    window.showTab = function(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        tg.HapticFeedback.impactOccurred('medium');
-    }
+        // Перевірка при завантаженні
+        async function initApp() {
+            const isSubscribed = await checkSubscriptionViaSupabase();
+            if (!isSubscribed) {
+                showSubscriptionOverlay();
+            } else {
+                loadData();
+            }
+        }
 
-    document.getElementById('btn-sport').onclick = () => { currentType = 'sport'; document.getElementById('btn-sport').classList.add('active'); document.getElementById('btn-esport').classList.remove('active'); loadData(); };
-    document.getElementById('btn-esport').onclick = () => { currentType = 'esport'; document.getElementById('btn-esport').classList.add('active'); document.getElementById('btn-sport').classList.remove('active'); loadData(); };
+        async function loadData() {
+            try {
+                const { data: predictions, error: pError } = await sbClient
+                    .from('predictions')
+                    .select('*')
+                    .order('id', { ascending: false });
 
-    loadData();
-</script>
+                if (!pError && predictions) {
+                    renderLists(predictions);
+                    calculateStats(predictions);
+                }
+
+                if (userId) {
+                    const { data: profile, error: uError } = await sbClient
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', userId)
+                        .single();
+
+                    if (!uError && profile) {
+                        updateProfileUI(profile);
+                        updateReferralUI(profile);
+                    }
+                }
+            } catch (e) { console.error("Error:", e); }
+            setupUserInfo();
+        }
+
+        // Оновлена функція рефералки через бота
+        function updateReferralUI(profile) {
+            const count = profile.ref_count || 0;
+            const progress = Math.min((count / 3) * 100, 100);
+
+            if (document.getElementById('ref-status')) document.getElementById('ref-status').innerText = `${count}/3`;
+            if (document.getElementById('ref-fill')) document.getElementById('ref-fill').style.width = `${progress}%`;
+
+            if (profile.is_vip && document.getElementById('ref-banner')) {
+                document.getElementById('ref-banner').style.display = 'none';
+            }
+        }
+
+        // Генерація реферального посилання на бота
+        function shareRefLink() {
+            const refLink = `https://t.me/${botUsername}?start=${userId}`;
+            const text = `Заціни круті прогнози на спорт! Заходь за моїм посиланням:`;
+
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
+        }
+
+        // Решта функцій (calculateStats, renderLists тощо) залишаються без змін
+        function calculateStats(predictions) {
+            const finished = predictions.filter(p => p.status === 'win' || p.status === 'loss');
+            if (finished.length === 0) return;
+            const wins = finished.filter(p => p.status === 'win').length;
+            const winrate = Math.round((wins / finished.length) * 100);
+            const totalOdds = finished.reduce((sum, p) => sum + parseFloat(p.odds || 0), 0);
+            const avgOdds = (totalOdds / finished.length).toFixed(2);
+            const winOddsSum = finished.filter(p => p.status === 'win').reduce((sum, p) => sum + parseFloat(p.odds || 0), 0);
+            const roi = (((winOddsSum / finished.length) - 1) * 100).toFixed(1);
+            document.getElementById('stat-total-winrate').innerText = winrate + '%';
+            document.getElementById('stat-total-bets').innerText = finished.length;
+            document.getElementById('stat-avg-odds').innerText = avgOdds;
+            document.getElementById('stat-roi').innerText = (roi >= 0 ? '+' : '') + roi + '%';
+            const formContainer = document.getElementById('form-streak');
+            formContainer.innerHTML = '';
+            finished.slice(0, 10).forEach(p => {
+                const dot = document.createElement('div');
+                dot.className = `form-dot ${p.status === 'win' ? 'dot-win' : 'dot-loss'}`;
+                dot.innerText = p.status === 'win' ? 'W' : 'L';
+                formContainer.appendChild(dot);
+            });
+            updateCategoryStat('sport', finished.filter(p => p.type === 'sport'));
+            updateCategoryStat('esport', finished.filter(p => p.type === 'esport'));
+        }
+
+        function updateCategoryStat(id, bets) {
+            if (bets.length === 0) return;
+            const wins = bets.filter(p => p.status === 'win').length;
+            const rate = Math.round((wins / bets.length) * 100);
+            document.getElementById(`winrate-${id}`).innerText = rate + '%';
+            document.getElementById(`bar-${id}`).style.width = rate + '%';
+        }
+
+        function updateProfileUI(profile) {
+            const balanceEl = document.getElementById('header-balance');
+            const label = document.getElementById('vip-label');
+            const buySection = document.getElementById('vip-buy-section');
+            if (balanceEl) balanceEl.innerText = profile.balance || '0';
+            if (profile.is_vip && label && buySection) {
+                label.innerText = "👑 VIP-ПІДПИСНИК";
+                label.classList.add('vip-active');
+                buySection.style.display = 'none';
+            }
+        }
+
+        function renderLists(data) {
+            const activeContainer = document.getElementById('active-list');
+            const finishedContainer = document.getElementById('finished-list');
+            if (!activeContainer || !finishedContainer || !data) return;
+            activeContainer.innerHTML = '';
+            finishedContainer.innerHTML = '';
+            const active = data.filter(p => p.type === currentType && p.status === 'active');
+            const finished = data.filter(p => p.type === currentType && p.status !== 'active').slice(0, 15);
+            if (active.length === 0) activeContainer.innerHTML = '<div style="text-align:center; color:var(--text-hint); padding: 20px;">Немає активних прогнозів</div>';
+            active.forEach(p => activeContainer.appendChild(createCard(p)));
+            finished.forEach(p => finishedContainer.appendChild(createCard(p)));
+        }
+
+        function createCard(p) {
+            const card = document.createElement('div');
+            card.className = `card ${p.isVip ? 'vip' : ''} ${p.status !== 'active' ? 'finished' : ''}`;
+            const resText = p.status === 'win' ? '<div class="card-result" style="color: var(--win)">✅ ВИГРАШ</div>' :
+                p.status === 'loss' ? '<div class="card-result" style="color: var(--loss)">❌ ПРОГРАШ</div>' : '';
+            card.innerHTML = `<div class="card-header"><span>${p.isVip ? '⭐️ VIP' : 'FREE'}</span><span>${p.time || ''}</span></div><div class="card-teams">${p.teams || 'Матч'}</div><div>Ставка: ${p.bet || '-'} • Кеф ${p.odds || '-'}</div>${resText}`;
+            return card;
+        }
+
+        function setupUserInfo() {
+            const nameEl = document.getElementById('user-full-name');
+            const avatarEl = document.getElementById('user-avatar');
+            if (tg.initDataUnsafe?.user) {
+                const user = tg.initDataUnsafe.user;
+                if (nameEl) nameEl.innerText = (user.first_name + " " + (user.last_name || "")).trim();
+                if (avatarEl && user.photo_url) avatarEl.src = user.photo_url;
+            }
+        }
+
+        window.showTab = function (tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        window.buyVip = function () { tg.showConfirm("Бажаєте активувати VIP-підписку?"); }
+
+        document.getElementById('btn-sport').onclick = () => {
+            currentType = 'sport';
+            document.getElementById('btn-sport').classList.add('active');
+            document.getElementById('btn-esport').classList.remove('active');
+            loadData();
+        };
+        document.getElementById('btn-esport').onclick = () => {
+            currentType = 'esport';
+            document.getElementById('btn-esport').classList.add('active');
+            document.getElementById('btn-sport').classList.remove('active');
+            loadData();
+        };
+
+        initApp();
+    </script>
 </body>
+
 </html>
