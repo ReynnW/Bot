@@ -518,68 +518,12 @@
         const SUPABASE_KEY = 'sb_publishable_0x-1u2t0-B7X8fvz_wlmFw_XPgfxTkK';
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // URL вашого бота API (змініть на реальний URL сервера)
-        const BOT_API_URL = 'https://your-server-url.com'; // Замініть на реальний URL
-        const CHANNEL_LINK = 'https://t.me/+KTUc5I9BZtw2NDYy';
-
         let currentType = 'sport';
         let userId = tg.initDataUnsafe?.user?.id;
         // Юзернейм вашого бота для реферальних посилань
         let botUsername = "testbsminiappbot";
 
-        // Функція створення блокуючого оверлея
-        function showSubscriptionOverlay() {
-            const overlay = document.createElement('div');
-            overlay.id = 'subscription-overlay';
-            overlay.style.cssText = `
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(28, 28, 30, 0.98);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-        `;
-            overlay.innerHTML = `
-            <div style="font-size: 4rem; margin-bottom: 20px;">🔒</div>
-            <h2 style="color: white; margin-bottom: 10px;">Доступ обмежено</h2>
-            <p style="color: #8e8e93; margin-bottom: 20px;">Щоб користуватися додатком, підпишіться на наш канал</p>
-            <a href="${CHANNEL_LINK}" style="
-                background: linear-gradient(135deg, #007aff, #5856d6);
-                color: white;
-                padding: 16px 32px;
-                border-radius: 12px;
-                text-decoration: none;
-                font-weight: bold;
-                font-size: 1rem;
-                margin-bottom: 15px;
-                display: inline-block;
-            ">📢 Підписатися на канал</a>
-            <button onclick="recheckSubscription()" style="
-                background: #2c2c2e;
-                color: white;
-                padding: 12px 24px;
-                border-radius: 10px;
-                border: 1px solid #444;
-                cursor: pointer;
-                font-size: 0.9rem;
-            ">✅ Перевірити підписку</button>
-            <p style="color: #8e8e93; font-size: 0.75rem; margin-top: 20px;">
-                Після підписки натисніть "Перевірити підписку"
-            </p>
-        `;
-            document.body.appendChild(overlay);
-        }
-
-        function hideSubscriptionOverlay() {
-            const overlay = document.getElementById('subscription-overlay');
-            if (overlay) overlay.remove();
-        }
-
-        // Функція перевірки підписки через Supabase (альтернативний метод)
+        // Функція перевірки реєстрації через Supabase
         async function checkSubscriptionViaSupabase() {
             if (!userId) return false;
 
@@ -598,24 +542,15 @@
             }
         }
 
-        async function recheckSubscription() {
-            const isSubscribed = await checkSubscriptionViaSupabase();
-            if (isSubscribed) {
-                hideSubscriptionOverlay();
-                loadData();
-                tg.showAlert("✅ Доступ дозволено!");
-            } else {
-                tg.showAlert("❌ Ви ще не зареєстровані. Спершу напишіть боту /start та підпишіться на канал.");
-            }
-        }
-
-        // Перевірка при завантаженні
+        // Перевірка при завантаженні - завжди завантажуємо дані
         async function initApp() {
-            const isSubscribed = await checkSubscriptionViaSupabase();
-            if (!isSubscribed) {
-                showSubscriptionOverlay();
-            } else {
-                loadData();
+            // Завжди завантажуємо основні дані
+            loadData();
+
+            // Якщо користувач не зареєстрований - ховаємо реферальний банер
+            const isRegistered = await checkSubscriptionViaSupabase();
+            if (!isRegistered && document.getElementById('ref-banner')) {
+                document.getElementById('ref-banner').style.display = 'none';
             }
         }
 
