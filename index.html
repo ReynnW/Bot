@@ -188,17 +188,6 @@
     let currentType = 'sport';
     let userId = tg.initDataUnsafe?.user?.id;
 
-    // Тепер посилання буде вести на t.me/testbsminiappbot?start=ваш_id
-    let botUsername = "testbsminiappbot"; 
-
-    function shareRefLink() {
-    const refLink = `https://t.me/${botUsername}?start=${userId}`;
-    const text = `Заціни круті прогнози на спорт! Заходь за моїм посиланням:`;
-    
-    // Це відкриє вікно вибору друзів у Telegram
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
-}
-
     async function loadData() {
         try {
             const { data: predictions, error: pError } = await sbClient
